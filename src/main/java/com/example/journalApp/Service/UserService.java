@@ -27,7 +27,7 @@ public class UserService {
     public ResponseEntity<User> registerUsers(User user) {
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(Arrays.asList("User"));
+            user.setRoles(Arrays.asList("user"));
             User saved = userRepository.save(user);
             log.info("HEHEHEHEHE !!!");
             return new ResponseEntity<>(saved, HttpStatus.CREATED);
