@@ -17,7 +17,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- har din new file -->
             <fileNamePattern>logs/application-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>  <!-- 7 days ka logs rakho -->
+            <maxHistory>1</maxHistory>  <!-- 7 days ka logs rakho -->
         </rollingPolicy>
 
         <encoder>

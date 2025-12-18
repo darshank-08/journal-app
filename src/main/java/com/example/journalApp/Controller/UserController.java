@@ -1,16 +1,16 @@
 package com.example.journalApp.Controller;
 
+import com.example.journalApp.DTO.CatFactDTO;
 import com.example.journalApp.Entity.Journal;
 import com.example.journalApp.Entity.User;
+import com.example.journalApp.Service.CatFactService;
 import com.example.journalApp.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +21,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CatFactService catFactService;
 
     @GetMapping("/all")
     public List<User> getAll(){
@@ -51,5 +54,10 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+    @GetMapping("/greeting")
+    public ResponseEntity<?> greeting() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CatFactDTO catFact = catFactService.getRandomFact();
+        return new ResponseEntity<>( "Hii, " + authentication.getName() + "\n"  + catFact.getFact() ,HttpStatus.OK);
+    }
 }
