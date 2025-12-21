@@ -3,6 +3,7 @@ package com.example.journalApp.Controller;
 import com.example.journalApp.DTO.CatFactDTO;
 import com.example.journalApp.Entity.User;
 import com.example.journalApp.Repository.UserRepositoryImpl;
+import com.example.journalApp.Scheduler.UserScheduler;
 import com.example.journalApp.Service.CatFactService;
 import com.example.journalApp.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class PublicController {
     @Autowired
     UserRepositoryImpl userRepositoryImpl;
 
+    @Autowired
+    UserScheduler userScheduler;
+
     @PostMapping("/add")
     public ResponseEntity<?> createUser(@RequestBody User user){
         return userService.registerUsers(user);
@@ -48,6 +52,11 @@ public class PublicController {
 
         List<User> users = userRepositoryImpl.getUserSA();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/sentiment-analysis")
+    public ResponseEntity mailSend(){
+        return ResponseEntity.ok("mail sent to:" + userScheduler.findAndMail());
     }
 
 }

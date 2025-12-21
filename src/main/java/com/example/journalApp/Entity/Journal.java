@@ -1,5 +1,6 @@
 package com.example.journalApp.Entity;
 
+import com.example.journalApp.Enum.Sentiments;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -20,5 +21,6 @@ public class Journal {
 
     private LocalDateTime createdAt;
 
+    private Sentiments sentiments;
 
 }
