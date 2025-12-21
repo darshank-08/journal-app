@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,16 +30,25 @@ public class JournalService {
     public ResponseEntity<?> create(Journal journal, String userName) {
 
         User user = userService.findByUserName(userName);
+
         try {
+            // 🔥 ADD DATE HERE
+            journal.setCreatedAt(LocalDateTime.now());
+
             Journal saved = journalRepository.save(journal);
             user.getJournals().add(saved);
+
             userService.createUser(user);
-            return ResponseEntity.status(201).body(saved); // 201 Created
+
+            return ResponseEntity.status(201).body(saved);
+
         } catch (Exception e) {
             log.error("e: ", e);
-            return ResponseEntity.status(500).body("Something went wrong: " + e.getMessage());
+            return ResponseEntity.status(500)
+                    .body("Something went wrong: " + e.getMessage());
         }
     }
+
 
     public List<Journal> getAll() {
         List<Journal> journals = journalRepository.findAll();

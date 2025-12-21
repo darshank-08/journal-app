@@ -3,6 +3,7 @@ package com.example.journalApp.apiResponse.catche;
 import com.example.journalApp.Entity.AppCacheConfig;
 import com.example.journalApp.Repository.ConfigRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ public class AppCache {
     private ConfigRepository configRepository;
 
     private Map<String, String> cache = new HashMap<>();
+
 
     @PostConstruct
     public void init() {

@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Document("journalEntry")
 @Data
 @NoArgsConstructor
@@ -15,4 +17,8 @@ public class Journal {
 
     private String title;
     private String content;
+
+    private LocalDateTime createdAt;
+
+
 }
