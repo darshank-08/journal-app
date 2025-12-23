@@ -5,34 +5,67 @@ import com.example.journalApp.Entity.User;
 import com.example.journalApp.Repository.UserRepositoryImpl;
 import com.example.journalApp.Scheduler.UserScheduler;
 import com.example.journalApp.Service.CatFactService;
+import com.example.journalApp.Service.UserDetailServicesIMPL;
 import com.example.journalApp.Service.UserService;
+import com.example.journalApp.Utils.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/public")
+@Slf4j
 public class PublicController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    CatFactService catFactService;
+    private CatFactService catFactService;
 
     @Autowired
-    UserRepositoryImpl userRepositoryImpl;
+    private UserRepositoryImpl userRepositoryImpl;
 
     @Autowired
-    UserScheduler userScheduler;
+    private UserScheduler userScheduler;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> createUser(@RequestBody User user){
+    @Autowired
+    private AuthenticationManager auth;
+
+    @Autowired
+    private UserDetailServicesIMPL userDetailServicesIMPL;
+
+    @Autowired
+    private  JwtUtils jwtUtils;
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody User user){
         return userService.registerUsers(user);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user){
+        try {
+            auth.authenticate(new UsernamePasswordAuthenticationToken(
+                    user.getUserName(), user.getPassword())
+            );
+            UserDetails userDetails = userDetailServicesIMPL.loadUserByUsername(user.getUserName());
+            String jwt = jwtUtils.generateToken(userDetails.getUsername());
+            return ResponseEntity.ok(jwt);
+        }catch (Exception e){
+           log.error("Error while creating token");
+           return ResponseEntity.badRequest().body("Incorrect username or password");
+        }
+
     }
 
     @GetMapping("/cat-facts/")
